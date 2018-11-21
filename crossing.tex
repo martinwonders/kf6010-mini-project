@@ -2,12 +2,13 @@
 \documentclass{article}
 \usepackage[british]{babel}
 
-\usepackage[vscale=0.8, hscale=0.75, includemp, marginparwidth=1.5cm]{geometry}
-
 \usepackage{hyperref}
-\usepackage{todonotes}
+\usepackage{tcolorbox}
 
 \usepackage{tikz-timing}
+
+\usepackage[right=2cm, vscale=0.8, includemp, marginparsep=5mm,
+marginparwidth=1.8cm]{geometry}
 
 \title{KF6010 Mini Project}
 \author{Dr Alun Moon\thanks{\url{alun.moon@northumbria.ac.uk}} and
@@ -47,11 +48,13 @@ The safety constraints are:
 		sequences (see \ref{light-sequence}) must be followed.
 \end{itemize}
 
+\clearpage
 \subsection{Light sequences}\label{light-sequence}
 The lights in the crossing follow prescribed sequences, which must be adhered
 to.
 \subsubsection{Traffic light}
-The traffic lights have Red, Amber\todo[color=blue!10]{use the blue led},and
+The traffic lights have Red, Amber
+\marginpar{use the blue led for the amber light}, and
 Green lights.  These show in a fixed sequence;
 \begin{enumerate}
 	\item Red only
