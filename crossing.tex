@@ -44,8 +44,8 @@ The safety constraints are:
 		the same time
 	\item When a pedestrian signals that they want to cross, that request must
 		be satisfied
-	\item Timing constrains (see \ref{time-constraint}) and light
-		sequences (see \ref{light-sequence}) must be followed.
+	\item Timing constrains (see~\ref{time-constraint}) and light
+		sequences (see~\ref{light-sequence}) must be followed.
 \end{itemize}
 
 \clearpage
@@ -76,7 +76,7 @@ The sequence for these is
 \subsection{Timings}\label{time-constraint}
 The light sequences are subject to time constraints between transitions. 
 These apply to the traffic lights performing the Red$\rightarrow$Green and
-Green$\rightarrow$Red parts of the sequence.  Shown in  figure \ref{light-timing-diagram}
+Green$\rightarrow$Red parts of the sequence.  Shown in  figure~\ref{light-timing-diagram}
 
 \subsubsection{Red$\rightarrow$Green}
 The ``Red and Amber'' part of the sequence should show for 3 seconds
@@ -85,24 +85,53 @@ The ``Red and Amber'' part of the sequence should show for 3 seconds
 The ``Amber'' part of the sequence should show for 3 seconds
 
 \begin{figure}\centering
-	\begin{tikztimingtable}
-		{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
-		{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
-		{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
-		{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
-	\extracode
-	\vertlines[black!20]{3,6, 15,18}
-	\begin{pgfonlayer}{background}
-		\draw[|<->|] (b)--node[below]{3s}(e);
-		\draw[|<->|] (g)--node[below]{3s}(h);
-	\end{pgfonlayer}
-	\end{tikztimingtable}
-	\caption{Traffic light timing sequence}
-	\label{light-timing-diagram}
+\begin{tikztimingtable}
+	{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
+	{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
+	{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
+	{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
+\extracode
+\vertlines[black!20]{3,6, 15,18}
+\begin{pgfonlayer}{background}
+	\draw[|<->|] (b)--node[below]{3s}(e);
+	\draw[|<->|] (g)--node[below]{3s}(h);
+\end{pgfonlayer}
+\end{tikztimingtable}
+\caption{Traffic light timing sequence}
+\label{light-timing-diagram}
 \end{figure}
 
+\clearpage
+\appendix
+\section{Frequency of bleep and duration of beeps}
+From \url{http://www.ukroads.org/webfiles/TR%202509%20A.pdf
+}
 
+	\begin{quote}
+		The fundamental frequency of the
+		tone shall be between 2.0 kHz and
+		3.5 kHz, which is pulsed at 240
+		pulses per minute ± 60 pulses per
+		minute with a mark space ratio of
+		1.5:1 ± 10\%. 
+	\end{quote}
 
+\section{Timings of light sequences}
+	\url{https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/330214/ltn-2-95_pedestrian-crossings.pdf}
+
+	\begin{tabular}{llll}	
+		PERIOD & SIGNALS SHOWN & & TIMINGS (Seconds) \\ 
+		& TO PEDESTRIANS & TO VEHICLES \\
+		1 & Red  & Green   & 20--60  \\
+	2 & Red  & Amber & 3 \\
+	3 & Red  & Red  & 1 to 3 \\
+	4 & Green & Red & 4 to 9 \\
+	5 & Red  & Red & 1--5 \\
+	6 & Red  & Red & 0--22  \\
+	7 & Red  & Red & 0--3  \\
+	8 & Red  & Red & 0--3  \\
+	9 & Red  & Red with Amber  & 2 \\
+\end{tabular}
 
 \end{document}
 
