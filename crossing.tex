@@ -1,0 +1,105 @@
+%&pdflatex
+\documentclass{article}
+\usepackage[british]{babel}
+
+\usepackage[vscale=0.8, hscale=0.75, includemp, marginparwidth=1.5cm]{geometry}
+
+\usepackage{hyperref}
+\usepackage{todonotes}
+
+\usepackage{tikz-timing}
+
+\title{KF6010 Mini Project}
+\author{Dr Alun Moon\thanks{\url{alun.moon@northumbria.ac.uk}} and
+Dr David Kendall\thanks{\url{david.kendall@northumbria.ac.uk}}}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+\section{Introduction}
+	This mini project runs at the end of the first semester, and can be viewed
+	as a formative exercise to get feedback ready for the final assessment at
+	the end of the module.
+	\begin{quote}
+		Do treat this as seriously as if it were an assignment.
+		Because this isn't assessed, we can give you much more help and
+		feedback than we can with the final assignment.  
+
+		\emph{Take this opportunity to build up your knowledge and confidence.}
+	\end{quote}
+
+\section{Scenario}
+A pedestrian crossing has the following features:
+\begin{itemize}
+	\item Traffic lights to control traffic on the road
+	\item Pedestrian lights to control the flow of pedestrians across the road
+	\item A push button for pedestrians to signal that they want to cross
+\end{itemize}
+The safety constraints are:
+\begin{itemize}
+	\item Traffic and pedestrians should not be permitted in the crossing at
+		the same time
+	\item When a pedestrian signals that they want to cross, that request must
+		be satisfied
+	\item Timing constrains (see \ref{time-constraint}) and light
+		sequences (see \ref{light-sequence}) must be followed.
+\end{itemize}
+
+\subsection{Light sequences}\label{light-sequence}
+The lights in the crossing follow prescribed sequences, which must be adhered
+to.
+\subsubsection{Traffic light}
+The traffic lights have Red, Amber\todo[color=blue!10]{use the blue led},and
+Green lights.  These show in a fixed sequence;
+\begin{enumerate}
+	\item Red only
+	\item Red and Amber
+	\item Green
+	\item Amber
+	\item Red
+\end{enumerate}
+
+\subsubsection{Pedestrian lights}
+The lights signalling to the pedestrians consists of a Red and Green lights.
+The sequence for these is
+\begin{enumerate}
+	\item Red
+	\item Green
+	\item Red
+\end{enumerate}
+
+\subsection{Timings}\label{time-constraint}
+The light sequences are subject to time constraints between transitions. 
+These apply to the traffic lights performing the Red$\rightarrow$Green and
+Green$\rightarrow$Red parts of the sequence.  Shown in  figure \ref{light-timing-diagram}
+
+\subsubsection{Red$\rightarrow$Green}
+The ``Red and Amber'' part of the sequence should show for 3 seconds
+
+\subsubsection{Green$\rightarrow$Red}
+The ``Amber'' part of the sequence should show for 3 seconds
+
+\begin{figure}\centering
+	\begin{tikztimingtable}
+		{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
+		{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
+		{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
+		{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
+	\extracode
+	\vertlines[black!20]{3,6, 15,18}
+	\begin{pgfonlayer}{background}
+		\draw[|<->|] (b)--node[below]{3s}(e);
+		\draw[|<->|] (g)--node[below]{3s}(h);
+	\end{pgfonlayer}
+	\end{tikztimingtable}
+	\caption{Traffic light timing sequence}
+	\label{light-timing-diagram}
+\end{figure}
+
+
+
+
+\end{document}
+
