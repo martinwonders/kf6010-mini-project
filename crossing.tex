@@ -3,7 +3,9 @@
 \usepackage[british]{babel}
 
 \usepackage{hyperref}
+\usepackage{natbib}
 \usepackage{tcolorbox}
+\usepackage{booktabs,siunitx}
 
 \usepackage{tikz-timing}
 
@@ -48,6 +50,13 @@ The safety constraints are:
 		sequences (see~\ref{light-sequence}) must be followed.
 \end{itemize}
 
+\subsection{Requirements}
+\begin{description}
+	\item[interrupts] should be used for the button presses
+	\item[mutexex] must be used for exclusive access to the crossing
+	\item[Semaphres] should be used for signalling
+\end{description}
+
 \clearpage
 \subsection{Light sequences}\label{light-sequence}
 The lights in the crossing follow prescribed sequences, which must be adhered
@@ -55,7 +64,7 @@ to.
 \subsubsection{Traffic light}
 The traffic lights have Red, Amber
 \marginpar{use the blue led for the amber light}, and
-Green lights.  These show in a fixed sequence;
+Green lights.  These show in a fixed sequence \citep[Schedule 14, para 4.2]{tsrgd};
 \begin{enumerate}
 	\item Red only
 	\item Red and Amber
@@ -75,63 +84,102 @@ The sequence for these is
 
 \subsection{Timings}\label{time-constraint}
 The light sequences are subject to time constraints between transitions. 
-These apply to the traffic lights performing the Red$\rightarrow$Green and
-Green$\rightarrow$Red parts of the sequence.  Shown in  figure~\ref{light-timing-diagram}
+The timings are summarised in table~\ref{timing-sequence} taken from \citep[Table 6,
+page 19]{dps}
 
-\subsubsection{Red$\rightarrow$Green}
-The ``Red and Amber'' part of the sequence should show for 3 seconds
+\begin{table}
+	\caption{Timing sequence for crossing in seconds}
+	\label{timing-sequence}
+	\centering
+	\begin{tabular}{rllSSl}\toprule
+		Phase & pedestrians & vehicles & \multicolumn{2}{c}{timings} \\
+			  &				&		   & min & max \\
+		1 & Red & Green & \\
+		2 & Red & Amber & 3 && \emph{mandatory} \\
+		3 & Red & Red   & 1&3\\
+		4 & Green & Red & 4 & 9 & with audible tone\\
+		5 & Red & Red   & 1 & 5 \\
+		6 & Red & Red and Amber & 2 && \emph{mandatory} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
-\subsubsection{Green$\rightarrow$Red}
-The ``Amber'' part of the sequence should show for 3 seconds
+\subsubsection{Red and Amber}
+The ``Red and Amber'' part of the sequence must show for 2 seconds
+\citep[Schedule 14, para 4.3]{tsrgd}
 
-\begin{figure}\centering
-\begin{tikztimingtable}
-	{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
-	{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
-	{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
-	{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
-\extracode
-\vertlines[black!20]{3,6, 15,18}
-\begin{pgfonlayer}{background}
-	\draw[|<->|] (b)--node[below]{3s}(e);
-	\draw[|<->|] (g)--node[below]{3s}(h);
-\end{pgfonlayer}
-\end{tikztimingtable}
-\caption{Traffic light timing sequence}
-\label{light-timing-diagram}
-\end{figure}
+\subsubsection{Amber}
+The ``Amber'' part of the sequence mush show for 3 seconds \citep[Schedule 14,
+para 4.4]{tsrgd}
 
-\clearpage
-\appendix
-\section{Frequency of bleep and duration of beeps}
-From \url{http://www.ukroads.org/webfiles/TR%202509%20A.pdf
-}
+%%--\begin{figure}\centering
+%%--\begin{tikztimingtable}
+%%--	{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
+%%--	{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
+%%--	{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
+%%--	{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
+%%--\extracode
+%%--\vertlines[black!20]{3,6, 15,18}
+%%--\begin{pgfonlayer}{background}
+%%--	\draw[|<->|] (b)--node[below]{3s}(e);
+%%--	\draw[|<->|] (g)--node[below]{3s}(h);
+%%--\end{pgfonlayer}
+%%--\end{tikztimingtable}
+%%--\caption{Traffic light timing sequence}
+%%--\label{light-timing-diagram}
+%%--\end{figure}
 
-	\begin{quote}
-		The fundamental frequency of the
-		tone shall be between 2.0 kHz and
-		3.5 kHz, which is pulsed at 240
-		pulses per minute ± 60 pulses per
-		minute with a mark space ratio of
-		1.5:1 ± 10\%. 
-	\end{quote}
+\section{Audible signal}
+The green light indicating pedestrians may cross is accompanied by an audible
+signal.  This has a frequency between 2kHz and 3.5kHz, pulsed at 240 pulses
+per minute, with a mark space ratio of 1.5:1 \cite[para 2.5]{psaepc}
 
-\section{Timings of light sequences}
-	\url{https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/330214/ltn-2-95_pedestrian-crossings.pdf}
+\subsection{Frequency}
+The tone can be generated with a PWM output.  The period for the PWM output is
+calculated in table~\ref{tone-freq}
 
-	\begin{tabular}{llll}	
-		PERIOD & SIGNALS SHOWN & & TIMINGS (Seconds) \\ 
-		& TO PEDESTRIANS & TO VEHICLES \\
-		1 & Red  & Green   & 20--60  \\
-	2 & Red  & Amber & 3 \\
-	3 & Red  & Red  & 1 to 3 \\
-	4 & Green & Red & 4 to 9 \\
-	5 & Red  & Red & 1--5 \\
-	6 & Red  & Red & 0--22  \\
-	7 & Red  & Red & 0--3  \\
-	8 & Red  & Red & 0--3  \\
-	9 & Red  & Red with Amber  & 2 \\
+\begin{table}[t]
+	\caption{Audible tone frequency}
+	\label{tone-freq}
+	\centering
+\begin{tabular}{lSs}\toprule
+	Frequency & 2 & \kilo\hertz \\
+			  &  2000 & \hertz \\
+	period	&	0.0005 & \second \\
+			& 0.5	& \milli\second \\\midrule
+PWM period	& 500 & \micro\second\\\bottomrule
 \end{tabular}
+\end{table}
+
+\subsection{Pulse}
+The pulse timing is calculated in tables~\ref{pulse-rate} and \ref{mark-space}
+A mark-space ratio of 1.5:1 is 3:2\\
+
+\begin{table}[t]
+	\caption{Audible pulse timings}
+	\label{pulse-rate}
+	\centering
+\begin{tabular}{lSs}\toprule
+	Pulses & 240 & \per\minute \\
+			& 4  & \hertz \\
+	period & 0.25 & \second \\\midrule
+		& 	250 & \milli\second\\\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[t]
+	\caption{Mark-space ratio}
+	\label{mark-space}
+	\centering
+\begin{tabular}{lcSs}\toprule
+	mark & $\frac{3}{5}$ period  & 150 & \milli\second \\
+	space  & $\frac{2}{5}$ period  & 100 & \milli\second \\\bottomrule
+\end{tabular}
+\end{table}
+
+\bibliographystyle{plainnat}
+\bibliography{traffic-regs}
 
 \end{document}
 
