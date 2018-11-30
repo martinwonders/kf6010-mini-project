@@ -34,6 +34,20 @@ Dr David Kendall\thanks{\url{david.kendall@northumbria.ac.uk}}}
 	\end{quote}
 
 \section{Scenario}
+You are tasked with writing a \emph{robust} low power controller for a
+pedestrian crossing.  The crossing has standard light sequences for the
+traffic and pedestrians.  In addition to the light signals there is an audible
+crossing tone.  The system should be event driven.
+
+The crossing is subject to various legislation and standards set out by the
+Department for Transport.  Behaviour of the traffic signals is principally
+covered in the ``The Traffic Signs Regulations and General Directions''
+\citep{tsrgd}.  The sequences and timings for use in pedestrian crossings are
+given in ``The Design of Pedestrian Crossings'' \citep{dps}.  The
+specifications for the audible signal are in ``Performance Specifications for
+Audible Equipment for use at Pedestrian Crossings''\citep{psaepc}
+
+\subsection{Features}
 A pedestrian crossing has the following features:
 \begin{itemize}
 	\item Traffic lights to control traffic on the road
@@ -50,22 +64,22 @@ The safety constraints are:
 		sequences (see~\ref{light-sequence}) must be followed.
 \end{itemize}
 
-\subsection{Requirements}
-\begin{description}
-	\item[interrupts] should be used for the button presses
-	\item[mutexex] must be used for exclusive access to the crossing
-	\item[Semaphres] should be used for signalling
-\end{description}
+\section{Requirements}
+%%- \begin{description}
+%%- 	\item[interrupts] should be used for the button presses
+%%- 		\item[mutexex] must be used for exclusive access to the crossing
+%%- 	\item[Semaphres] should be used for signalling
+%%- \end{description}
 
-\clearpage
 \subsection{Light sequences}\label{light-sequence}
 The lights in the crossing follow prescribed sequences, which must be adhered
 to.
-\subsubsection{Traffic light}
+\paragraph{Traffic light}
 The traffic lights have Red, Amber
 \marginpar{use the blue led for the amber light}, and
 Green lights.  These show in a fixed sequence \citep[Schedule 14, para 4.2]{tsrgd};
 \begin{enumerate}
+\setlength{\itemsep}{-3pt}
 	\item Red only
 	\item Red and Amber
 	\item Green
@@ -73,10 +87,11 @@ Green lights.  These show in a fixed sequence \citep[Schedule 14, para 4.2]{tsrg
 	\item Red
 \end{enumerate}
 
-\subsubsection{Pedestrian lights}
+\paragraph{Pedestrian lights}
 The lights signalling to the pedestrians consists of a Red and Green lights.
 The sequence for these is
 \begin{enumerate}
+\setlength{\itemsep}{-3pt}
 	\item Red
 	\item Green
 	\item Red
@@ -87,13 +102,13 @@ The light sequences are subject to time constraints between transitions.
 The timings are summarised in table~\ref{timing-sequence} taken from \citep[Table 6,
 page 19]{dps}
 
-\begin{table}
+\begin{table}[h]
 	\caption{Timing sequence for crossing in seconds}
 	\label{timing-sequence}
 	\centering
 	\begin{tabular}{rllSSl}\toprule
 		Phase & pedestrians & vehicles & \multicolumn{2}{c}{timings} \\
-			  &				&		   & min & max \\
+			  &				&		   & min & max \\\midrule
 		1 & Red & Green & \\
 		2 & Red & Amber & 3 && \emph{mandatory} \\
 		3 & Red & Red   & 1&3\\
@@ -104,11 +119,11 @@ page 19]{dps}
 	\end{tabular}
 \end{table}
 
-\subsubsection{Red and Amber}
+\paragraph{Red and Amber}
 The ``Red and Amber'' part of the sequence must show for 2 seconds
 \citep[Schedule 14, para 4.3]{tsrgd}
 
-\subsubsection{Amber}
+\paragraph{Amber}
 The ``Amber'' part of the sequence mush show for 3 seconds \citep[Schedule 14,
 para 4.4]{tsrgd}
 
@@ -134,11 +149,16 @@ The green light indicating pedestrians may cross is accompanied by an audible
 signal.  This has a frequency between 2kHz and 3.5kHz, pulsed at 240 pulses
 per minute, with a mark space ratio of 1.5:1 \cite[para 2.5]{psaepc}
 
+\bibliographystyle{plainnat}
+\bibliography{traffic-regs}
+
+\clearpage\appendix
+\section{Implementation}
 \subsection{Frequency}
 The tone can be generated with a PWM output.  The period for the PWM output is
 calculated in table~\ref{tone-freq}
 
-\begin{table}[t]
+\begin{table}[h]
 	\caption{Audible tone frequency}
 	\label{tone-freq}
 	\centering
@@ -155,7 +175,7 @@ PWM period	& 500 & \micro\second\\\bottomrule
 The pulse timing is calculated in tables~\ref{pulse-rate} and \ref{mark-space}
 A mark-space ratio of 1.5:1 is 3:2\\
 
-\begin{table}[t]
+\begin{table}[h]
 	\caption{Audible pulse timings}
 	\label{pulse-rate}
 	\centering
@@ -168,7 +188,7 @@ A mark-space ratio of 1.5:1 is 3:2\\
 \end{table}
 
 
-\begin{table}[t]
+\begin{table}[h]
 	\caption{Mark-space ratio}
 	\label{mark-space}
 	\centering
@@ -177,9 +197,6 @@ A mark-space ratio of 1.5:1 is 3:2\\
 	space  & $\frac{2}{5}$ period  & 100 & \milli\second \\\bottomrule
 \end{tabular}
 \end{table}
-
-\bibliographystyle{plainnat}
-\bibliography{traffic-regs}
 
 \end{document}
 
