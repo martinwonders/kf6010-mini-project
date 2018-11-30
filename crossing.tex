@@ -127,27 +127,48 @@ The ``Red and Amber'' part of the sequence must show for 2 seconds
 The ``Amber'' part of the sequence mush show for 3 seconds \citep[Schedule 14,
 para 4.4]{tsrgd}
 
-%%--\begin{figure}\centering
-%%--\begin{tikztimingtable}
-%%--	{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
-%%--	{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
-%%--	{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
-%%--	{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
-%%--\extracode
-%%--\vertlines[black!20]{3,6, 15,18}
-%%--\begin{pgfonlayer}{background}
-%%--	\draw[|<->|] (b)--node[below]{3s}(e);
-%%--	\draw[|<->|] (g)--node[below]{3s}(h);
-%%--\end{pgfonlayer}
-%%--\end{tikztimingtable}
-%%--\caption{Traffic light timing sequence}
-%%--\label{light-timing-diagram}
-%%--\end{figure}
+\begin{figure}\centering
+\begin{tikztimingtable}
+	{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
+	{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
+	{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
+	{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
+\extracode
+\vertlines[black!20]{3,6, 15,18}
+\begin{pgfonlayer}{background}
+	\draw[|<->|] (b)--node[below]{3s}(e);
+	\draw[|<->|] (g)--node[below]{3s}(h);
+\end{pgfonlayer}
+\end{tikztimingtable}
+\caption{Traffic light timing sequence}
+\label{light-timing-diagram}
+\end{figure}
 
 \section{Audible signal}
 The green light indicating pedestrians may cross is accompanied by an audible
 signal.  This has a frequency between 2kHz and 3.5kHz, pulsed at 240 pulses
 per minute, with a mark space ratio of 1.5:1 \cite[para 2.5]{psaepc}
+
+\begin{figure}
+\begin{tikztimingtable}
+Red   & [red] 3H 2H 2L {[dotted]4L} 2L 3L 2H 5H 4H\\ 
+Amber & [orange] 3L 2H 2L {[dotted]4L} 2L 3H 2L 5L 4L\\
+Green & [green] 3L 2L 2H {[dotted]4H} 2H 3L 2L 5L 4L\\ 
+
+Red   & 7H {[dotted]4H} 2H 3H 2H 5L 4H \\
+Green & 7L {[dotted]4L} 2L 3L 2L 5H 4L \\
+
+Butt  & 7L {[dotted]4L} L H L\\
+
+{}    & 3SN(a)2SN(b)  \\
+
+%\extracode
+%\horlines{3,5}
+%\vertlines[black!20]{2,3,15,18}
+\end{tikztimingtable}
+\caption{Timing diagram}
+\label{t}
+\end{figure}
 
 \bibliographystyle{plainnat}
 \bibliography{traffic-regs}
