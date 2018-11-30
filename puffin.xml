@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+chan tocross;
+chan cancross;
+chan crossed;
+
+  const int C_RED    = 0;
+  const int C_GREEN  = 1;
+  const int C_BLUE   = 2;
+  const int C_PURPLE = 3;
+  const int C_ORANGE = 5;
+  const int C_YELLOW = 6;
+  const int C_CYAN   = 9;</declaration>
+	<template>
+		<name x="5" y="5">Traffic</name>
+		<declaration>// Place local declarations here.
+clock x;
+int Cred, Camber, Cgreen;</declaration>
+		<location id="id0" x="-246" y="0">
+			<name x="-323" y="-8">Crossing</name>
+		</location>
+		<location id="id1" x="-178" y="68">
+			<name x="-188" y="34">stopped</name>
+		</location>
+		<location id="id2" x="-42" y="68">
+			<name x="-52" y="34">amber</name>
+			<label kind="invariant" x="-52" y="85">x&lt;=3</label>
+		</location>
+		<location id="id3" x="93" y="68">
+			<name x="110" y="59">green</name>
+		</location>
+		<location id="id4" x="93" y="-76">
+			<name x="83" y="-110">go</name>
+		</location>
+		<location id="id5" x="-42" y="-76">
+			<name x="-68" y="-127">redamber</name>
+			<label kind="invariant" x="-52" y="-59">x&lt;=2</label>
+		</location>
+		<location id="id6" x="-178" y="-76">
+			<name x="-188" y="-110">Waiting</name>
+		</location>
+		<init ref="id6"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-263" y="-93">crossed?</label>
+			<nail x="-246" y="-76"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-272" y="68">cancross!</label>
+			<nail x="-246" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-119" y="51">x==3</label>
+			<label kind="assignment" x="-212" y="93">Cred=1,Camber=Cgreen=0</label>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="-144" y="144">x=0,Camber=1,Cred=Cgreen=0</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="93" y="-21">tocross?</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-17" y="-93">x==2</label>
+			<label kind="assignment" x="-24" y="-76">Cred=Camber=0,Cgreen=1</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="assignment" x="-204" y="-51">x=0,Cred=Camber=1,Cgreen=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>Button</name>
+		<declaration>clock z;
+</declaration>
+		<location id="id7" x="-960" y="-425">
+		</location>
+		<init ref="id7"/>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-909" y="-437">tocross!</label>
+			<nail x="-909" y="-459"/>
+			<nail x="-909" y="-382"/>
+		</transition>
+	</template>
+	<template>
+		<name>Pedestrians</name>
+		<declaration>clock y;
+int red;
+int green;
+</declaration>
+		<location id="id8" x="-263" y="-42">
+		</location>
+		<location id="id9" x="-161" y="-42">
+		</location>
+		<location id="id10" x="-161" y="-127">
+			<name x="-161" y="-153">safecross</name>
+		</location>
+		<location id="id11" x="-263" y="-127">
+			<name x="-273" y="-161">changetogo</name>
+		</location>
+		<location id="id12" x="-365" y="-127">
+			<name x="-375" y="-161">Wait</name>
+		</location>
+		<init ref="id12"/>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-347" y="-59">crossed!</label>
+			<nail x="-365" y="-42"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-238" y="-59">y&gt;2</label>
+			<label kind="assignment" x="-245" y="-42">green=0,
+red=1</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-136" y="-136">y&gt;5</label>
+			<label kind="assignment" x="-161" y="-101">y=0</label>
+			<nail x="-161" y="-76"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-238" y="-144">y&gt;2</label>
+			<label kind="assignment" x="-245" y="-127">y=0,
+red=0,
+green=1</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-347" y="-144">cancross?</label>
+			<label kind="assignment" x="-347" y="-127">y=0</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Cars = Traffic();
+People = Pedestrians();
+Press = Button();
+// List one or more processes to be composed into a system.
+system Cars, People, Press;
+
+gantt {
+  p:
+    People.red -&gt; C_RED,
+    People.green -&gt; C_GREEN;
+ c:
+    Cars.Cred -&gt; C_RED,
+    Cars.Camber -&gt;C_ORANGE,
+    Cars.Cgreen -&gt; C_GREEN,
+    Cars.Camber and Cars.Cred -&gt; C_PURPLE;
+}
+</system>
+	<queries>
+	</queries>
+</nta>
