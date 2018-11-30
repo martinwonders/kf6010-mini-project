@@ -120,58 +120,69 @@ page 19]{dps}
 \end{table}
 
 \paragraph{Red and Amber}
-The ``Red and Amber'' part of the sequence must show for 2 seconds
-\citep[Schedule 14, para 4.3]{tsrgd}
+The ``Red and Amber'' lights must show together for 2 seconds \citep[Schedule 14, para 4.3]{tsrgd}
 
 \paragraph{Amber}
-The ``Amber'' part of the sequence mush show for 3 seconds \citep[Schedule 14,
-para 4.4]{tsrgd}
-
-\begin{figure}\centering
-\begin{tikztimingtable}
-	{Red}  & 3H     3H     3L {[dotted]3L} 3L 3L 3H\\
-	{Amber}& 3L     3H     3L {[dotted]3L} 3L 3H 3L\\
-	{Green}& 3L     3L     3H {[dotted]3H} 3H 3L 3L\\
-	{}     & 3SN(b) 3SN(e) 3S     3S       3SN(g) 3SN(h)\\
-\extracode
-\vertlines[black!20]{3,6, 15,18}
-\begin{pgfonlayer}{background}
-	\draw[|<->|] (b)--node[below]{3s}(e);
-	\draw[|<->|] (g)--node[below]{3s}(h);
-\end{pgfonlayer}
-\end{tikztimingtable}
-\caption{Traffic light timing sequence}
-\label{light-timing-diagram}
-\end{figure}
+The single ``Amber'' light must show for 3 seconds \citep[Schedule 14, para 4.4]{tsrgd}
 
 \section{Audible signal}
 The green light indicating pedestrians may cross is accompanied by an audible
 signal.  This has a frequency between 2kHz and 3.5kHz, pulsed at 240 pulses
 per minute, with a mark space ratio of 1.5:1 \cite[para 2.5]{psaepc}
 
+
 \begin{figure}
+	\centering
 \begin{tikztimingtable}
 Red   & [red] 3H 2H 2L {[dotted]4L} 2L 3L 2H 5H 4H\\ 
 Amber & [orange] 3L 2H 2L {[dotted]4L} 2L 3H 2L 5L 4L\\
-Green & [green] 3L 2L 2H {[dotted]4H} 2H 3L 2L 5L 4L\\ 
-
-Red   & 7H {[dotted]4H} 2H 3H 2H 5L 4H \\
-Green & 7L {[dotted]4L} 2L 3L 2L 5H 4L \\
-
-Butt  & 7L {[dotted]4L} L H L\\
-
-{}    & 3SN(a)2SN(b)  \\
-
-%\extracode
-%\horlines{3,5}
-%\vertlines[black!20]{2,3,15,18}
+Green & [green!80!black] 3L 2L 2H {[dotted]4H} 2H 3L 2L 5L 4L\\ 
+	{} & \\
+	Red   & [red] 7H {[dotted]4H} 2H 3H 2H 5L 4H \\
+	Green & [green!80!black] 7L {[dotted]4L} 2L 3L 2L 5H 4L \\
+	{} & \\
+Button  & 7L {[dotted]4L} L H 14L\\
+	{}    & 3SN(a)2SN(b) 7SN(c) 1SN(d)3SN(e)2SN(f) 5SN(g) 2SN(h)\\
+\extracode
+\vertlines[black!20]{3,5,13,16,18,23,25}
+\vertlines[dashed,black!50]{12}
+\begin{pgfonlayer}{background}
+	\draw[<->] (a)--node[below]{2s}(b);
+	\draw (c) node[pin=below left:interrupt]{};
+	\draw[<->] (d)--node[below]{3s}(e);
+	\draw[<->] (e)--node[below]{2s}(f);
+	\draw[<->] (g)--node[below]{2s}(h);
+\end{pgfonlayer}
 \end{tikztimingtable}
 \caption{Timing diagram}
 \label{t}
 \end{figure}
 
+\section{Implementation}
+\paragraph{A suggested solution may include}
+\begin{itemize}
+	\item Threads to handle 
+		\begin{itemize}
+			\item Traffic signals
+			\item Pedestrian signals
+		\end{itemize}
+	\item Interrupt handlers to respond to the button pushes.
+	\item Mutexes for safety critical code
+	\item Semaphores for internal signalling and messaging
+\end{itemize}
+
+\paragraph{My sample solution has} \emph{3 threads, 2 interrupt handlers, 1
+mutex, and 2 semaphores}
+
+
+\section{Implementation notes}
+More detailed notes on implementation issues will be released as an appendix
+in the second week of the mini project.
+
 \bibliographystyle{plainnat}
 \bibliography{traffic-regs}
+
+\end{document}
 
 \clearpage\appendix
 \section{Implementation}
