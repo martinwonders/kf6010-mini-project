@@ -1,0 +1,92 @@
+%&pdflatex
+\documentclass[12pt]{article}
+\usepackage[british]{babel}
+
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{tcolorbox}
+\usepackage{booktabs,siunitx}
+
+\usepackage{tikz-timing}
+
+\usepackage[right=2cm, vscale=0.8, includemp, marginparsep=5mm,
+marginparwidth=1.8cm]{geometry}
+
+\title{KF6010 Mini Project --- Addendum}
+\author{Dr Alun Moon\thanks{\url{alun.moon@northumbria.ac.uk}} and
+Dr David Kendall\thanks{\url{david.kendall@northumbria.ac.uk}}}
+\begin{document}
+\maketitle
+\appendix
+\begin{appendix}
+	Here are some design notes on my version of the pedestrian crossing.
+\end{appendix}
+\section{Threads/Tasks}
+There are three threads running the tasks, within each task timings are handled
+by simple \texttt{wait} calls. 
+\paragraph{Vehicles} handles the light sequence for the vehicle lights.
+\paragraph{Pedestrians} handles the light sequence for the pedestrians.
+\paragraph{Bleep} handles the on-off mechanism for the audible signal.
+
+\section{Control, Synchronisation, and Signalling}
+\subsection{Mutex}
+The crossing is a critical shared resource.
+\paragraph{A Mutex} is used to control access to the shared piece of tarmac,
+so only vehicles or pedestrians can use the crossing.
+
+\subsection{Button signal}
+The push button to signal a pedestrian is waiting.  
+The thread handling the vehicle lights, waits on a semaphore while the light  is green.
+\paragraph{Interrupt}  The interrupt handler for the button(s) releases the
+semaphore waited on by the vehicle thread.
+\paragraph{Semaphore} \texttt{tocross} signals that pedestrians are waiting.
+(The vehicle thread uses \texttt{tocross.wait()}
+\paragraph{Semaphore} \texttt{bleeping} is used to start and stop the bleeping
+in synchronisation with the pedestrian crossing thread.
+\section{Calculations}
+\subsection{Frequency}
+The tone can be generated with a PWM output.  The period for the PWM output is
+calculated in table~\ref{tone-freq}
+
+\begin{table}[h]
+	\caption{Audible tone frequency}
+	\label{tone-freq}
+	\centering
+\begin{tabular}{lSs}\toprule
+	Frequency & 2 & \kilo\hertz \\
+			  &  2000 & \hertz \\
+	period	&	0.0005 & \second \\
+			& 0.5	& \milli\second \\\midrule
+PWM period	& 500 & \micro\second\\\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Pulse}
+The pulse timing is calculated in tables~\ref{pulse-rate} and \ref{mark-space}
+A mark-space ratio of 1.5:1 is 3:2\\
+
+\begin{table}[h]
+	\caption{Audible pulse timings}
+	\label{pulse-rate}
+	\centering
+\begin{tabular}{lSs}\toprule
+	Pulses & 240 & \per\minute \\
+			& 4  & \hertz \\
+	period & 0.25 & \second \\\midrule
+		& 	250 & \milli\second\\\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[h]
+	\caption{Mark-space ratio}
+	\label{mark-space}
+	\centering
+\begin{tabular}{lcSs}\toprule
+	mark & $\frac{3}{5}$ period  & 150 & \milli\second \\
+	space  & $\frac{2}{5}$ period  & 100 & \milli\second \\\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
+
