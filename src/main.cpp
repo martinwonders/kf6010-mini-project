@@ -11,6 +11,9 @@
 
 enum { On, Off }; /* sneaky hack to handle common anode LEDs */
 
+#include "led.h"
+LED red(LED_RED);
+
 /* Locks and signals */
 Mutex crossing; /* who holds the mutex can use the crossing */
 Semaphore tocross; /* indicate that pedestians want to cross */
