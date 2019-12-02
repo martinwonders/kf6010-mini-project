@@ -3,41 +3,37 @@
  * weeks 11&12 (2hours in labs)
  */
 
-/* Dr Alun Moon
- * November 2018
+/* Dr Martin Wonders, based on solution by Dr Alun Moon
+ * December 2019
  */
 
 #include <mbed.h>
 
 enum { On, Off }; /* sneaky hack to handle common anode LEDs */
 
+void pedestrians(void);
+void traffic(void);
+void pressed(void);
+void bleeper(void);
+
 /* Locks and signals */
-Mutex crossing; /* who holds the mutex can use the crossing */
-Semaphore tocross; /* indicate that pedestians want to cross */
+Mutex crossing;     /* who holds the mutex can use the crossing */
+Semaphore tocross;  /* indicate that pedestians want to cross */
 Semaphore bleeping;
 
-/* Pedestrian task */
-void pedestrians(void)
+int main(void)
 {
-	DigitalOut go(LED_GREEN,Off);
-	DigitalOut stop(LED_RED,On);
+	InterruptIn button_a(SW2);
+	InterruptIn button_b(SW3);
+	Thread cars, people, beeps;
 
-	while(true) {
-		crossing.lock(); /*  cannot proceed until released by the traffic */
-		wait(1);
-		/* Red -> green */
-		stop = Off;
-		go = On;
-		bleeping.release();
-		/* allow pedestrains to cross */
-		wait(5);
-		bleeping.wait();
-		/* green -> red */
-		stop = On;
-		go = Off;
-		wait(2);
-		crossing.unlock();
-	}
+	button_a.fall( pressed );
+	button_b.fall( pressed );
+	cars.start( traffic );
+	people.start( pedestrians );
+	beeps.start(bleeper);
+
+	cars.join();
 }
 
 /* Traffic task */
@@ -81,6 +77,30 @@ void pressed(void)
 	tocross.release();
 }
 
+/* Pedestrian task */
+void pedestrians(void)
+{
+	DigitalOut go(LED_GREEN,Off);
+	DigitalOut stop(LED_RED,On);
+
+	while(true) {
+		crossing.lock(); /*  cannot proceed until released by the traffic */
+		wait(1);
+		/* Red -> green */
+		stop = Off;
+		go = On;
+		bleeping.release();
+		/* allow pedestrains to cross */
+		wait(5);
+		bleeping.wait();
+		/* green -> red */
+		stop = On;
+		go = Off;
+		wait(2);
+		crossing.unlock();
+	}
+}
+
 void bleeper(void)
 {
 	DigitalOut beep(LED_BLUE,Off);
@@ -99,18 +119,7 @@ void bleeper(void)
 	}
 }
 
-int main(void)
-{
-	InterruptIn button_a(SW2);
-	InterruptIn button_b(SW3);
-	Thread cars, people, beeps;
 
-	button_a.fall( pressed );
-	button_b.fall( pressed );
-	cars.start( traffic );
-	people.start( pedestrians );
-	beeps.start(bleeper);
 
-	cars.join();
-}
+
 
