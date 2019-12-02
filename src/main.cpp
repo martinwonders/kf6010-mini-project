@@ -11,6 +11,7 @@
 
 enum { On, Off }; /* sneaky hack to handle common anode LEDs */
 
+/*
 class LED 
 {
 	DigitalOut pin;
@@ -22,7 +23,7 @@ class LED
 };
 
 LED red(LED_RED);
-
+*/
 /* Locks and signals */
 Mutex crossing; /* who holds the mutex can use the crossing */
 Semaphore tocross; /* indicate that pedestians want to cross */
