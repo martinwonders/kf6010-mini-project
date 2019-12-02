@@ -11,19 +11,6 @@
 
 enum { On, Off }; /* sneaky hack to handle common anode LEDs */
 
-/*
-class LED 
-{
-	DigitalOut pin;
-	enum {ON,OFF};
-	public:
-	LED(PinName p) : pin(p,OFF) {}
-	void on() { pin=ON; }
-	void off() { pin=OFF; }
-};
-
-LED red(LED_RED);
-*/
 /* Locks and signals */
 Mutex crossing; /* who holds the mutex can use the crossing */
 Semaphore tocross; /* indicate that pedestians want to cross */
